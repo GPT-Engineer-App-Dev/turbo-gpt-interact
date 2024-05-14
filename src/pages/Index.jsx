@@ -56,7 +56,7 @@ const Index = () => {
       </Box>
       <Box>
         {response && (
-          <Text fontSize="lg" p={4} borderWidth="1px" borderRadius="lg">
+          <Text fontSize="xl" p={6} borderWidth="2px" borderColor="blue.500" borderRadius="md">
             {response}
           </Text>
         )}
