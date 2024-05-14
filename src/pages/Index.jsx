@@ -1,10 +1,11 @@
 import { useState } from 'react';
-import { Box, Input, Button, Text, VStack, useToast } from '@chakra-ui/react';
+import { Box, Input, Button, Text, VStack, useToast, Collapse } from '@chakra-ui/react';
 import { create } from 'lib/openai';
 
 const Index = () => {
   const [prompt, setPrompt] = useState('');
   const [response, setResponse] = useState('');
+  const [showOutput, setShowOutput] = useState(false);
   const toast = useToast();
 
   const handleInputChange = (event) => {
@@ -22,7 +23,7 @@ const Index = () => {
       });
       return;
     }
-
+    setShowOutput(false); // Hide output box when new request is made
     const res = await create({
       messages: [{ role: 'user', content: prompt }],
       model: 'gpt-3.5-turbo'
@@ -30,6 +31,7 @@ const Index = () => {
 
     if (res.data.choices && res.data.choices.length > 0) {
       setResponse(res.data.choices[0].message.content);
+      setShowOutput(true); // Show output box when response is received
     } else {
       toast({
         title: 'Error',
@@ -54,13 +56,13 @@ const Index = () => {
       <Box>
         <Button onClick={handleSubmit} colorScheme="blue" size="lg">Submit</Button>
       </Box>
-      <Box>
+      <Collapse in={showOutput} animateOpacity>
         {response && (
           <Text fontSize="xl" p={6} borderWidth="2px" borderColor="blue.500" borderRadius="md">
             {response}
           </Text>
         )}
-      </Box>
+      </Collapse>
     </VStack>
   );
 };
